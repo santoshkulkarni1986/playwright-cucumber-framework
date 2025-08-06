@@ -22,17 +22,17 @@ let page: Page;
 let context: BrowserContext;
 
 // Retry and timeout configuration
-const defaultTimeout = 30000;
 const maxRetries = parseInt(process.env.MAX_RETRIES || '2', 10); // 2 retries default
 
 BeforeAll(async function () {
   logger.info('Initializing Hooks');
   getEnv();
-  dotenv.config({ path: `.env.${process.env.ENV || 'test'}` }); // Load environment-specific .env file
+  dotenv.config({ path: `.env.${process.env.ENV || 'test'}` });
 
   const browserType =
-  process.env.npm_config_BROWSER || process.env.BROWSER || 'chrome'; // Prioritize npm_config_BROWSER
-  const headless = process.env.HEAD === 'false'; // Read headless mode from env
+    process.env.npm_config_BROWSER || process.env.BROWSER || 'chrome';
+
+  const headless = true; // ✅ Force headless mode ON
   logger.info(`Launching browser: ${browserType}, Headless mode: ${headless}`);
 
   const reportDir = './playwright-report';
@@ -40,8 +40,7 @@ BeforeAll(async function () {
     fs.mkdirSync(reportDir, { recursive: true });
     logger.info(`Created report directory: ${reportDir}`);
   }
-   
-  // Launch browser based on the environment variable
+
   switch (browserType.toLowerCase()) {
     case 'chrome':
       browser = await chromium.launch({ headless });
@@ -64,11 +63,11 @@ Before(async function () {
   context = await browser.newContext({
     recordVideo: { dir: './playwright-report/videos' },
   });
-  context.setDefaultTimeout(defaultTimeout);
-  context.setDefaultNavigationTimeout(defaultTimeout);
+  context.setDefaultTimeout(60 * 1000); // 60 seconds
+  context.setDefaultNavigationTimeout(60 * 1000);
 
   page = await context.newPage();
-  page.setDefaultTimeout(defaultTimeout); // Set timeout for page actions
+  page.setDefaultTimeout(60 * 1000); // Set timeout for page actions
   await context.tracing.start({ screenshots: true, snapshots: true });
   pageFixture.page = page;
 });
@@ -93,7 +92,7 @@ After(async function ({ pickle, result }) {
 AfterAll(async function () {
   try {
     logger.info('Closing browser after all tests...');
-    const closeTimeout = process.env.BROWSER === 'edge' ? 30000 : 20000; // Increase close timeout
+    const closeTimeout = parseInt(process.env.BROWSER_CLOSE_TIMEOUT || '15000', 10); 
 
     await Promise.race([
       browser.close(),
