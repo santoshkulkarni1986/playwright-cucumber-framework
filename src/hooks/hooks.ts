@@ -32,7 +32,7 @@ BeforeAll(async function () {
 
   const browserType =
   process.env.npm_config_BROWSER || process.env.BROWSER || 'chrome'; // Prioritize npm_config_BROWSER
-  const headless = process.env.HEAD === 'true'; // Read headless mode from env
+  const headless = process.env.HEAD === 'false'; // Read headless mode from env
   logger.info(`Launching browser: ${browserType}, Headless mode: ${headless}`);
 
   const reportDir = './playwright-report';
