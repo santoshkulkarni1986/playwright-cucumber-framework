@@ -1,7 +1,4 @@
-/***Author 
- * Santosh Kulkarni 
- */
-import { After, AfterAll, Before, BeforeAll, Status } from '@cucumber/cucumber';
+import { After, AfterAll, Before, BeforeAll, setDefaultTimeout, Status } from '@cucumber/cucumber';
 import {
   Browser,
   BrowserContext,
@@ -17,23 +14,23 @@ import { getEnv } from '../helper/env/env';
 import fs from 'fs';
 import path from 'path';
 
-let browser: Browser;
-let page: Page;
-let context: BrowserContext;
+// Set timeout globally
+setDefaultTimeout(60 * 1000);
 
-// Retry and timeout configuration
-const maxRetries = parseInt(process.env.MAX_RETRIES || '2', 10); // 2 retries default
+let browser: Browser;
+let browserType: string;
+let context: BrowserContext;
+let page: Page;
 
 BeforeAll(async function () {
   logger.info('Initializing Hooks');
   getEnv();
   dotenv.config({ path: `.env.${process.env.ENV || 'test'}` });
 
-  const browserType =
-    process.env.npm_config_BROWSER || process.env.BROWSER || 'chrome';
+  browserType = (process.env.npm_config_BROWSER || process.env.BROWSER || 'chrome').toLowerCase();
+  const headless = true;
 
-  const headless = true; // ✅ Force headless mode ON
-  logger.info(`Launching browser: ${browserType}, Headless mode: ${headless}`);
+  logger.info(`Launching browser: ${browserType}, Headless: ${headless}`);
 
   const reportDir = './playwright-report';
   if (!fs.existsSync(reportDir)) {
@@ -41,7 +38,7 @@ BeforeAll(async function () {
     logger.info(`Created report directory: ${reportDir}`);
   }
 
-  switch (browserType.toLowerCase()) {
+  switch (browserType) {
     case 'chrome':
       browser = await chromium.launch({ headless });
       break;
@@ -59,31 +56,43 @@ BeforeAll(async function () {
   }
 });
 
-Before(async function () {
+Before(async function ({ pickle }) {
+  const testName = pickle.name.replace(/\s+/g, '_');
+  const videoDir = `./playwright-report/${browserType}/videos/${testName}`;
+  fs.mkdirSync(videoDir, { recursive: true });
+
   context = await browser.newContext({
-    recordVideo: { dir: './playwright-report/videos' },
+    recordVideo: { dir: videoDir },
   });
-  context.setDefaultTimeout(60 * 1000); // 60 seconds
+
+  context.setDefaultTimeout(60 * 1000);
   context.setDefaultNavigationTimeout(60 * 1000);
 
   page = await context.newPage();
-  page.setDefaultTimeout(60 * 1000); // Set timeout for page actions
-  await context.tracing.start({ screenshots: true, snapshots: true });
+  page.setDefaultTimeout(60 * 1000);
   pageFixture.page = page;
+
+  const traceDir = `./playwright-report/${browserType}/traces/${testName}`;
+  fs.mkdirSync(traceDir, { recursive: true });
+  await context.tracing.start({ screenshots: true, snapshots: true });
+
+  // Attach metadata to world for later use
+  this.testName = testName;
 });
 
-After(async function ({ pickle, result }) {
-  const testName = pickle.name.replace(/\s+/g, '_');
+After(async function ({ result }) {
+  const testName = this.testName;
+  const screenshotPath = `./playwright-report/${browserType}/screenshots/${testName}.png`;
+
   if (result?.status === Status.FAILED) {
-    const screenshotPath = `./playwright-report/screenshots/${testName}.png`;
-    const image = await page.screenshot({ path: screenshotPath });
-    logger.error(`Test failed, screenshot saved at: ${screenshotPath}`);
-    await this.attach(image, 'image/png');
+    const screenshot = await page.screenshot({ path: screenshotPath });
+    await this.attach(screenshot, 'image/png');
+    logger.error(`❌ Test failed, screenshot saved: ${screenshotPath}`);
   }
 
-  const tracePath = `./playwright-report/traces/${testName}-trace.zip`;
+  const tracePath = `./playwright-report/${browserType}/traces/${testName}/${testName}-trace.zip`;
   await context.tracing.stop({ path: tracePath });
-  logger.info(`Trace saved at: ${tracePath}`);
+  logger.info(`📦 Trace saved: ${tracePath}`);
 
   await page.close();
   await context.close();
@@ -91,8 +100,8 @@ After(async function ({ pickle, result }) {
 
 AfterAll(async function () {
   try {
-    logger.info('Closing browser after all tests...');
-    const closeTimeout = parseInt(process.env.BROWSER_CLOSE_TIMEOUT || '15000', 10); 
+    logger.info('Closing browser...');
+    const closeTimeout = parseInt(process.env.BROWSER_CLOSE_TIMEOUT || '15000', 10);
 
     await Promise.race([
       browser.close(),
@@ -101,18 +110,8 @@ AfterAll(async function () {
       ),
     ]);
 
-    logger.info('Browser closed successfully.');
+    logger.info('✅ Browser closed');
   } catch (error) {
-    if (error instanceof Error) {
-      // TypeScript now knows 'error' is an instance of Error
-      if (error.message === 'Browser close timeout') {
-        logger.error('Browser closure timed out.');
-      } else {
-        logger.error('Unexpected error during browser closure: ', error);
-      }
-    } else {
-      // Handle non-Error types (if any)
-      logger.error('An unknown error occurred:', error);
-    }
+    logger.error('Error closing browser:', error);
   }
 });

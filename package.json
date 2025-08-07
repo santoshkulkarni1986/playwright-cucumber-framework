@@ -4,9 +4,9 @@
   "main": "index.js",
   "scripts": {
     "pretest": "npx ts-node src/helper/report/init.ts",
-      "test": "npm run test:test:chrome",
-
+    "test": "npm run test:test:chrome && npm run test:test:firefox",
     "test:test:chrome": "cross-env ENV=test FORCE_COLOR=0 BROWSER=chrome cucumber-js --config=config/cucumber.js",
+    "test:test:firefox": "cross-env ENV=test FORCE_COLOR=0 BROWSER=firefox cucumber-js --config=config/cucumber.js",
     "test:failed": "cucumber-js -p rerun @rerun.txt"
   },
   
