@@ -1,7 +1,7 @@
-/***Author 
- * Santosh Kulkarni 
+/***Author
+ * Santosh Kulkarni
  */
-import { expect, Locator, Page } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { pageFixture } from '../hooks/pageFixture'; // Import pageFixture
 import logger from '../Utility/logger'; // Ensure you have a LoggerUtility file set up for Winston configuration.
 import { PlaywrightWrapperUtility } from '../Utility/PlaywrightWrapperUtility';
@@ -32,7 +32,7 @@ export class LoginPage {
       if (!process.env.URL) {
         logger.warn('URL is not set in the .env file. Using fallback URL.');
       }
-      console.log('Using base URL:', baseUrl);
+      logger.info('Using base URL:', baseUrl);
       await this.page.goto(baseUrl, { waitUntil: 'load' });
       logger.info('Successfully navigated to the login page.');
     } catch (error) {
@@ -50,7 +50,7 @@ export class LoginPage {
       logger.info(`Start ${action}`);
       const userNameInput = LocatorUtility.getByLabelLocator(
         this.page,
-        'Username'
+        'Username',
       );
       await PlaywrightWrapperUtility.enterText(userNameInput, username);
       logger.info(`Successfully entered username: ${username}`);
@@ -69,13 +69,12 @@ export class LoginPage {
       logger.info(`Start ${action}`);
       const passWordInput = LocatorUtility.getByLabelLocator(
         this.page,
-        'Password'
+        'Password',
       );
       await PlaywrightWrapperUtility.enterText(passWordInput, password);
       logger.info(`Successfully entered password.`);
     } catch (error) {
       PlaywrightWrapperUtility.handleError(error, action);
-
     }
   }
 
@@ -89,7 +88,7 @@ export class LoginPage {
       const submitButton = LocatorUtility.getByRoleLocator(
         this.page,
         'button',
-        { name: 'Submit' }
+        { name: 'Submit' },
       );
       await PlaywrightWrapperUtility.clickOnElement(submitButton);
       logger.info(`Successfully clicked the login button.`);

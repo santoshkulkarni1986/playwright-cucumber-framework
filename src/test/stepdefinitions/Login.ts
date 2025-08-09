@@ -1,7 +1,6 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 import { expect, Page } from '@playwright/test';
 import { LoginPage } from '../../pages/loginPage';
-import { pageFixture } from '../../hooks/pageFixture';
 import logger from '../../Utility/logger';
 
 let loginPage: LoginPage;
@@ -17,7 +16,6 @@ When('I enter the userName {string}', async function (username: string) {
 
 When('I enter the password {string}', async function (password: string) {
   await loginPage.enterPassword(password); // Enter password
-  console.log(password);
 });
 
 When('I click the login button', async function () {

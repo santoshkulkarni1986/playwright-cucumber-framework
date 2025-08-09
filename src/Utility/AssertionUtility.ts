@@ -1,5 +1,5 @@
-/***Author 
- * Santosh Kulkarni 
+/***Author
+ * Santosh Kulkarni
  */
 import { Page, Locator, APIResponse } from 'playwright';
 import logger from './logger'; // Assuming Winston logger is configured in logger.ts
@@ -37,14 +37,14 @@ export class AssertionUtils {
    */
   static async assertToContainText(
     locator: Locator,
-    text: string
+    text: string,
   ): Promise<void> {
     try {
       await expect(locator).toContainText(text);
       logger.info(`Locator contains text: ${text}`);
     } catch (error) {
       logger.error(
-        `Assertion failed: Locator does not contain text '${text}' - ${error}`
+        `Assertion failed: Locator does not contain text '${text}' - ${error}`,
       );
       throw error;
     }
@@ -56,16 +56,16 @@ export class AssertionUtils {
   static async assertToHaveAttribute(
     locator: Locator,
     attribute: string,
-    value: string
+    value: string,
   ): Promise<void> {
     try {
       await expect(locator).toHaveAttribute(attribute, value);
       logger.info(
-        `Locator has attribute '${attribute}' with value '${value}'.`
+        `Locator has attribute '${attribute}' with value '${value}'.`,
       );
     } catch (error) {
       logger.error(
-        `Assertion failed: Locator does not have attribute '${attribute}' with value '${value}' - ${error}`
+        `Assertion failed: Locator does not have attribute '${attribute}' with value '${value}' - ${error}`,
       );
       throw error;
     }
@@ -171,7 +171,7 @@ export class AssertionUtils {
       logger.info('Locator is in the viewport.');
     } catch (error) {
       logger.error(
-        `Assertion failed: Locator is not in the viewport - ${error}`
+        `Assertion failed: Locator is not in the viewport - ${error}`,
       );
       throw error;
     }
@@ -212,7 +212,7 @@ export class AssertionUtils {
       logger.info('Response has an OK status.');
     } catch (error) {
       logger.error(
-        `Assertion failed: Response does not have an OK status - ${error}`
+        `Assertion failed: Response does not have an OK status - ${error}`,
       );
       throw error;
     }
@@ -227,7 +227,7 @@ export class AssertionUtils {
       logger.info(`Locator has text: '${text}'.`);
     } catch (error) {
       logger.error(
-        `Assertion failed: Locator does not have text '${text}' - ${error}`
+        `Assertion failed: Locator does not have text '${text}' - ${error}`,
       );
       throw error;
     }
@@ -239,16 +239,16 @@ export class AssertionUtils {
   static async assertToHaveCSS(
     locator: Locator,
     property: string,
-    value: string
+    value: string,
   ): Promise<void> {
     try {
       await expect(locator).toHaveCSS(property, value);
       logger.info(
-        `Locator has CSS property '${property}' with value '${value}'.`
+        `Locator has CSS property '${property}' with value '${value}'.`,
       );
     } catch (error) {
       logger.error(
-        `Assertion failed: Locator does not have CSS property '${property}' with value '${value}' - ${error}`
+        `Assertion failed: Locator does not have CSS property '${property}' with value '${value}' - ${error}`,
       );
       throw error;
     }
@@ -259,14 +259,14 @@ export class AssertionUtils {
    */
   static async assertPageToHaveScreenshot(
     page: Page,
-    screenshotPath: string
+    screenshotPath: string,
   ): Promise<void> {
     try {
       await expect(page).toHaveScreenshot(screenshotPath);
       logger.info(`Page has matching screenshot at '${screenshotPath}'.`);
     } catch (error) {
       logger.error(
-        `Assertion failed: Page screenshot does not match at '${screenshotPath}' - ${error}`
+        `Assertion failed: Page screenshot does not match at '${screenshotPath}' - ${error}`,
       );
       throw error;
     }

@@ -1,4 +1,4 @@
-/***Author 
+/***Author
  * Santosh Kulkarni
  */
 import { Page, Locator } from 'playwright';
@@ -93,7 +93,7 @@ export class LocatorUtility {
   static getByRoleLocator(
     page: Page,
     role: Role,
-    options?: Parameters<Page['getByRole']>[1]
+    options?: Parameters<Page['getByRole']>[1],
   ): Locator {
     try {
       logger.info(`Locating element by role: ${role}`);
@@ -110,7 +110,7 @@ export class LocatorUtility {
   static getByTextLocator(
     page: Page,
     text: string,
-    options?: Parameters<Page['getByText']>[1]
+    options?: Parameters<Page['getByText']>[1],
   ): Locator {
     try {
       logger.info(`Locating element by text: ${text}`);
@@ -127,7 +127,7 @@ export class LocatorUtility {
   static getByLabelLocator(
     page: Page,
     label: string,
-    options?: Parameters<Page['getByLabel']>[1]
+    options?: Parameters<Page['getByLabel']>[1],
   ): Locator {
     try {
       logger.info(`Locating element by label: ${label}`);
@@ -144,14 +144,14 @@ export class LocatorUtility {
   static getByPlaceholderLocator(
     page: Page,
     placeholder: string,
-    options?: Parameters<Page['getByPlaceholder']>[1]
+    options?: Parameters<Page['getByPlaceholder']>[1],
   ): Locator {
     try {
       logger.info(`Locating element by placeholder: ${placeholder}`);
       return page.getByPlaceholder(placeholder, options);
     } catch (error) {
       logger.error(
-        `Error locating element by placeholder: ${placeholder} - ${error}`
+        `Error locating element by placeholder: ${placeholder} - ${error}`,
       );
       throw error;
     }
@@ -163,7 +163,7 @@ export class LocatorUtility {
   static getByAltTextLocator(
     page: Page,
     altText: string,
-    options?: Parameters<Page['getByAltText']>[1]
+    options?: Parameters<Page['getByAltText']>[1],
   ): Locator {
     try {
       logger.info(`Locating element by alt text: ${altText}`);
@@ -180,7 +180,7 @@ export class LocatorUtility {
   static getByTitleLocator(
     page: Page,
     title: string,
-    options?: Parameters<Page['getByTitle']>[1]
+    options?: Parameters<Page['getByTitle']>[1],
   ): Locator {
     try {
       logger.info(`Locating element by title: ${title}`);
@@ -231,14 +231,14 @@ export class LocatorUtility {
       // Check if error is an instance of Error
       if (error instanceof Error) {
         logger.error(
-          `Error locating element with selector: ${selector}. Error: ${error.message}`
+          `Error locating element with selector: ${selector}. Error: ${error.message}`,
         );
         throw error;
       } else {
         // In case the error is not an instance of Error
         const errorMsg = 'An unknown error occurred';
         logger.error(
-          `Error locating element with selector: ${selector}. Error: ${errorMsg}`
+          `Error locating element with selector: ${selector}. Error: ${errorMsg}`,
         );
         throw new Error(errorMsg);
       }

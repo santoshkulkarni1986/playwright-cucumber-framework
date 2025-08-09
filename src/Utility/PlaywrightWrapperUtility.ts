@@ -1,4 +1,4 @@
-/***Author 
+/***Author
  * Santosh Kulkarni
  */
 import { Page, Locator } from 'playwright';
@@ -12,7 +12,7 @@ export class PlaywrightWrapperUtility {
    */
   private static async ensureElementVisible(
     locator: Locator,
-    action: string
+    action: string,
   ): Promise<void> {
     try {
       logger.info(`Checking visibility of element before ${action}`);
@@ -57,7 +57,7 @@ export class PlaywrightWrapperUtility {
   // Dropdown selection methods
   static async selectDropdownValueByText(
     locator: Locator,
-    text: string
+    text: string,
   ): Promise<void> {
     try {
       await this.ensureElementVisible(locator, 'selecting dropdown by text');
@@ -70,7 +70,7 @@ export class PlaywrightWrapperUtility {
 
   static async selectDropdownValueByValue(
     locator: Locator,
-    value: string
+    value: string,
   ): Promise<void> {
     try {
       await this.ensureElementVisible(locator, 'selecting dropdown by value');
@@ -83,7 +83,7 @@ export class PlaywrightWrapperUtility {
 
   static async selectDropdownValueByIndex(
     locator: Locator,
-    index: number
+    index: number,
   ): Promise<void> {
     try {
       await this.ensureElementVisible(locator, 'selecting dropdown by index');
@@ -115,7 +115,7 @@ export class PlaywrightWrapperUtility {
    */
   static async takeElementScreenshot(
     locator: Locator,
-    filePath: string
+    filePath: string,
   ): Promise<void> {
     try {
       await this.ensureElementVisible(locator, 'taking element screenshot');
@@ -190,7 +190,7 @@ export class PlaywrightWrapperUtility {
    */
   static async performUploadFile(
     locator: Locator,
-    filePath: string
+    filePath: string,
   ): Promise<void> {
     try {
       await this.ensureElementVisible(locator, 'uploading file');
@@ -238,7 +238,7 @@ export class PlaywrightWrapperUtility {
    */
   static async handleWindowTab(
     page: Page,
-    action: 'wait' | 'close'
+    action: 'wait' | 'close',
   ): Promise<void> {
     try {
       logger.info(`Handling new window/tab with action: ${action}`);
@@ -357,11 +357,11 @@ export class PlaywrightWrapperUtility {
     page: Page,
     urlPattern: string,
     responseBody: string,
-    statusCode: number
+    statusCode: number,
   ): Promise<void> {
     try {
       logger.info(
-        `Mocking API for ${urlPattern} with status code ${statusCode}`
+        `Mocking API for ${urlPattern} with status code ${statusCode}`,
       );
       await page.route(urlPattern, async (route) => {
         await route.fulfill({
@@ -384,7 +384,7 @@ export class PlaywrightWrapperUtility {
   static async mockRequest(
     page: Page,
     url: string,
-    response: any
+    response: any,
   ): Promise<void> {
     try {
       logger.info(`Mocking request for URL: ${url}`);
@@ -393,7 +393,7 @@ export class PlaywrightWrapperUtility {
           status: 200,
           contentType: 'application/json',
           body: JSON.stringify(response),
-        })
+        }),
       );
     } catch (error: unknown) {
       this.handleError(error, 'mocking network request');
@@ -411,7 +411,7 @@ export class PlaywrightWrapperUtility {
     page: Page,
     url: string,
     delayMs: number,
-    response: any
+    response: any,
   ): Promise<void> {
     try {
       logger.info(`Mocking request with delay for URL: ${url}`);
@@ -436,7 +436,7 @@ export class PlaywrightWrapperUtility {
   static async performDragAndDrop(
     page: Page,
     sourceLocator: Locator,
-    targetLocator: Locator
+    targetLocator: Locator,
   ): Promise<void> {
     try {
       logger.info('Starting drag and drop action');
@@ -459,7 +459,7 @@ export class PlaywrightWrapperUtility {
   static async waitForElementVisible(
     page: Page,
     locator: Locator,
-    timeout: number = 30000
+    timeout: number = 30000,
   ): Promise<void> {
     try {
       logger.info(`Waiting for element to be visible: ${locator}`);
@@ -477,7 +477,7 @@ export class PlaywrightWrapperUtility {
    */
   static async waitForPageInteractive(
     page: Page,
-    timeout: number = 30000
+    timeout: number = 30000,
   ): Promise<void> {
     try {
       logger.info('Waiting for page to be interactive');
@@ -494,7 +494,7 @@ export class PlaywrightWrapperUtility {
    */
   static async waitForPageIdle(
     page: Page,
-    timeout: number = 30000
+    timeout: number = 30000,
   ): Promise<void> {
     try {
       logger.info('Waiting for page to be idle');
@@ -514,11 +514,11 @@ export class PlaywrightWrapperUtility {
   static async performKeyboardAction(
     locator: Locator,
     text: string,
-    delay: number = 100
+    delay: number = 100,
   ): Promise<void> {
     try {
       logger.info(
-        `Performing keyboard action on ${locator} with text: ${text}`
+        `Performing keyboard action on ${locator} with text: ${text}`,
       );
       await locator.pressSequentially(text, { delay });
       logger.info(`Keyboard action completed: ${text}`);
@@ -570,7 +570,7 @@ export class PlaywrightWrapperUtility {
    */
   public static handleError(error: unknown, action: string): void {
     logger.error(
-      `Error occurred during ${action}: ${error instanceof Error ? error.message : error}`
+      `Error occurred during ${action}: ${error instanceof Error ? error.message : error}`,
     );
     throw new Error(`Failed to perform ${action}`);
   }

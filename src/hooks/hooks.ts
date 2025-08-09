@@ -1,4 +1,11 @@
-import { After, AfterAll, Before, BeforeAll, setDefaultTimeout, Status } from '@cucumber/cucumber';
+import {
+  After,
+  AfterAll,
+  Before,
+  BeforeAll,
+  setDefaultTimeout,
+  Status,
+} from '@cucumber/cucumber';
 import {
   Browser,
   BrowserContext,
@@ -12,7 +19,6 @@ import logger from '../Utility/logger';
 import * as dotenv from 'dotenv';
 import { getEnv } from '../helper/env/env';
 import fs from 'fs';
-import path from 'path';
 
 // Set timeout globally
 setDefaultTimeout(60 * 1000);
@@ -27,7 +33,11 @@ BeforeAll(async function () {
   getEnv();
   dotenv.config({ path: `.env.${process.env.ENV || 'test'}` });
 
-  browserType = (process.env.npm_config_BROWSER || process.env.BROWSER || 'chrome').toLowerCase();
+  browserType = (
+    process.env.npm_config_BROWSER ||
+    process.env.BROWSER ||
+    'chrome'
+  ).toLowerCase();
   const headless = true;
 
   logger.info(`Launching browser: ${browserType}, Headless: ${headless}`);
@@ -101,12 +111,18 @@ After(async function ({ result }) {
 AfterAll(async function () {
   try {
     logger.info('Closing browser...');
-    const closeTimeout = parseInt(process.env.BROWSER_CLOSE_TIMEOUT || '15000', 10);
+    const closeTimeout = parseInt(
+      process.env.BROWSER_CLOSE_TIMEOUT || '15000',
+      10,
+    );
 
     await Promise.race([
       browser.close(),
       new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Browser close timeout')), closeTimeout)
+        setTimeout(
+          () => reject(new Error('Browser close timeout')),
+          closeTimeout,
+        ),
       ),
     ]);
 
