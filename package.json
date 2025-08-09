@@ -4,11 +4,11 @@
   "main": "index.js",
   "scripts": {
     "pretest": "npx ts-node src/helper/report/init.ts && eslint --fix ./src --ext .ts,.tsx,.js",
-    "test": "npm run test:test:chrome && npm run test:test:firefox",
+    "test": "npm run test:test:chrome && npm run test:test:firefox && npm run test:test:edge",
     "test:test:chrome": "cross-env ENV=test FORCE_COLOR=0 BROWSER=chrome cucumber-js --config=config/cucumber.js",
     "test:test:firefox": "cross-env ENV=test FORCE_COLOR=0 BROWSER=firefox cucumber-js --config=config/cucumber.js",
-      "posttest": "npx ts-node src/helper/report/report.ts",
-
+    "test:test:edge": "cross-env ENV=test FORCE_COLOR=0 BROWSER=edge cucumber-js --config=config/cucumber.js",
+    "posttest": "npx ts-node src/helper/report/report.ts",
     "test:failed": "cucumber-js -p rerun @rerun.txt"
   },
   
@@ -18,7 +18,7 @@
   "description": "",
   "devDependencies": {
     "@cucumber/cucumber": "^10.9.0",
-    "@playwright/test": "^1.49.1",
+    "@playwright/test": "^1.54.2",
     "@types/node": "^22.10.2",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
@@ -28,7 +28,7 @@
     "eslint-define-config": "^2.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "multiple-cucumber-html-reporter": "^3.8.0",
-    "playwright": "^1.49.1",
+    "playwright": "^1.54.2",
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
