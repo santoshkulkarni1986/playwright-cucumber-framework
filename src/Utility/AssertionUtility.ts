@@ -2,7 +2,7 @@
  * Santosh Kulkarni
  */
 import { Page, Locator, APIResponse } from 'playwright';
-import logger from './logger'; // Assuming Winston logger is configured in logger.ts
+import logger from './logger'; 
 import { expect } from 'playwright/test';
 
 export class AssertionUtils {
