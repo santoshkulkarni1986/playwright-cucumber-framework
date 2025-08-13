@@ -14,7 +14,7 @@ report.generate({
       name: 'chrome',
       version: '112',
     },
-    device: 'Santosh Kulkarni & Kanchan Pandit',
+    device: 'Santosh Kulkarni',
     platform: {
       name: 'Windows',
       version: '10',
